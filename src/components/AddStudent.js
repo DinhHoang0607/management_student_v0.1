@@ -4,6 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import studentLists from './studentLists.json';
 import { v4 } from 'uuid';
 import { useNavigate, Link } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+
+const today = new Date();
 
 const AddStudent = () => {
 	const [name, setName] = useState('');
@@ -22,7 +25,26 @@ const AddStudent = () => {
 
 	let history = useNavigate();
 
-	const handleSubmit = () => {};
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		studentLists.push({
+			name: name,
+			student_code: studentSCode,
+			email: email,
+			phone_number: phoneNumber,
+			identify_card: identifyCard,
+			address: '47569 Superior Way',
+			address_live: 'Apt 1145',
+			birthday: birthday,
+			major: major,
+			nation: nation,
+			religion: religion,
+			gender: gender,
+			avatar: avatar,
+		});
+		history('/');
+	};
 
 	return (
 		<div>
@@ -69,15 +91,68 @@ const AddStudent = () => {
 					></Form.Control>
 				</Form.Group>
 				{/* <Form.Group className='mb-3' controlId='formName'>
-					<Form.Control
-						type='email'
-						placeholder='Email'
-						required
-						onChange={(e) => setName(e.target.value)}
-					></Form.Control>
+					<Form.Select onChange={(e) => setName(e.target.value)}>
+						<option>Tỉnh/ Thành phố</option>
+						<option value='1'>One</option>
+					</Form.Select>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Select onChange={(e) => setName(e.target.value)}>
+						<option>Quận/ Huyện</option>
+						<option value='1'>One</option>
+					</Form.Select>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Select onChange={(e) => setName(e.target.value)}>
+						<option>Phường/ Xã</option>
+						<option value='1'>One</option>
+					</Form.Select>
 				</Form.Group> */}
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Label>Ngày sinh</Form.Label>
+					<Form.Control
+						type='date'
+						onChange={(e) => setBirthday(e.target.value)}
+					/>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Control
+						type='text'
+						placeholder='Chuyên ngành'
+						required
+						onChange={(e) => setMajor(e.target.value)}
+					></Form.Control>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Control
+						type='text'
+						placeholder='Dân tộc'
+						required
+						onChange={(e) => setNation(e.target.value)}
+					></Form.Control>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Control
+						type='text'
+						placeholder='Tôn giáo'
+						required
+						onChange={(e) => setReligion(e.target.value)}
+					></Form.Control>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Select onChange={(e) => setGender(e.target.value)}>
+						<option>Giới tính</option>
+						<option value='Nam'>Nam</option>
+						<option value='Nữ'>Nữ</option>
+						<option value='Không xác định'>Không xác định</option>
+					</Form.Select>
+				</Form.Group>
+				<Form.Group className='mb-3' controlId='formName'>
+					<Form.Label>Ảnh chân dung</Form.Label>
+					<Form.Control type='file'></Form.Control>
+				</Form.Group>
 
-				<Button ocClick={(e) => handleSubmit(e)} type='submit'>
+				<Button onClick={(e) => handleSubmit(e)} type='submit'>
 					Submit
 				</Button>
 			</Form>
