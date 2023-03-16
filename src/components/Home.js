@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Table } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import studentLists from './studentLists.json';
 import { useNavigate, Link } from 'react-router-dom';
@@ -20,6 +20,7 @@ const arr = [
 	'avatar',
 ];
 const Home = () => {
+	const [search, setSearch] = useState('');
 	let history = useNavigate();
 	const handleDelete = (student_code) => {
 		var index = studentLists
@@ -34,6 +35,12 @@ const Home = () => {
 	return (
 		<>
 			<div style={{ margin: '10px' }}>
+				<Form.Control
+					type='text'
+					placeholder='Search'
+					required
+					onChange={(e) => setSearch(e.target.value)}
+				></Form.Control>
 				<div>
 					<Link to={'/create'}>
 						<Button>Create</Button>
@@ -61,27 +68,33 @@ const Home = () => {
 					</thead>
 					<tbody>
 						{studentLists && studentLists.length > 0
-							? studentLists.map((student, index) => (
-									<tr>
-										<td>{index + 1}</td>
-										<td>
-											<Link to={'/add'}>
-												<Button>add</Button>
-											</Link>
-											<Button>edit</Button>
-											<Button
-												onClick={() => {
-													handleDelete(student.student_code);
-												}}
-											>
-												delete
-											</Button>
-										</td>
-										{arr.map((e) => (
-											<td>{student[e]}</td>
-										))}
-									</tr>
-							  ))
+							? studentLists
+									.filter((item) => {
+										return search.toLowerCase() === ''
+											? item
+											: item.name.toLowerCase().includes(search);
+									})
+									.map((student, index) => (
+										<tr>
+											<td>{index + 1}</td>
+											<td>
+												<Link to={'/add'}>
+													<Button>add</Button>
+												</Link>
+												<Button>edit</Button>
+												<Button
+													onClick={() => {
+														handleDelete(student.student_code);
+													}}
+												>
+													delete
+												</Button>
+											</td>
+											{arr.map((e) => (
+												<td>{student[e]}</td>
+											))}
+										</tr>
+									))
 							: 'No data'}
 					</tbody>
 				</Table>
