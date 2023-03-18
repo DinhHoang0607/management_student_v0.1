@@ -6,18 +6,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const arr = [
-	'name',
-	'student_code',
-	'email',
-	'phone_number',
-	'identify_card',
-	'address',
-	'address_live',
-	'birthday',
-	'major',
-	'nation',
-	'religion',
-	'gender',
+	'FULLNAME',
+	'MSSV',
+	'EMAIL',
+	'PHONE',
+	'CMND',
+	'QQDIACHI',
+	'QQTINH',
+	'NGAYSINH',
+	'CHUYENNGANH',
+	'DANTOC',
+	'TONGIAO',
+	'GIOITINH',
 	'avatar',
 ];
 const Home = () => {
@@ -27,6 +27,8 @@ const Home = () => {
 	const [totalCount, setTotalCount] = useState(0);
 	const [search, setSearch] = useState('');
 	const [data, setData] = useState(null);
+	const [token, setToken] = useState('');
+	const [loading, setLoading] = useState(true);
 	let history = useNavigate();
 
 	const getUserList = async (pg = page, pgSize = pageSize) => {
@@ -41,18 +43,58 @@ const Home = () => {
 	};
 
 	useEffect(() => {
+		getToken();
 		fetchData();
 	}, []);
-	console.log(data);
-	const fetchData = async () => {
+	console.log(loading);
+	const getToken = async () => {
 		try {
-			const { data: response } = await axios.get(
+			const { data: response } = await axios.post(
 				'http://localhost:9090/oauth/token',
+				{
+					username: 'trungkb',
+					password: '123456',
+					grant_type: 'password',
+				},
+				{
+					auth: {
+						username: 'a08',
+						password: 'secret',
+					},
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				},
 			);
-			setData(response);
+			setToken(response.access_token);
 		} catch (error) {
 			console.error(error.message);
 		}
+	};
+	const fetchData = async () => {
+		setLoading(true);
+		try {
+			const { data: response } = await axios.post(
+				'http://localhost:9090/dbProcedure/get/DFAA77D5132B47F7BF53E7389CF4E61C',
+				{
+					sQUEQUANTINH: 1,
+					sNOIOTINH: 0,
+					pageNumber: 0,
+					limitNumber: 10,
+					text: '',
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+			setData(response.data.content.data);
+		} catch (error) {
+			console.error(error.message);
+		}
+		setLoading(false);
 	};
 
 	const handleDelete = (student_code) => {
@@ -100,35 +142,36 @@ const Home = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{studentLists && studentLists.length > 0
-							? studentLists
-									.filter((item) => {
-										return search.toLowerCase() === ''
-											? item
-											: item.name.toLowerCase().includes(search);
-									})
-									.map((student, index) => (
-										<tr key={index}>
-											<td>{index + 1}</td>
-											<td>
-												<Link to={'/add'}>
-													<Button>add</Button>
-												</Link>
-												<Button>edit</Button>
-												<Button
-													onClick={() => {
-														handleDelete(student.student_code);
-													}}
-												>
-													delete
-												</Button>
-											</td>
-											{arr.map((e) => (
-												<td>{student[e]}</td>
-											))}
-										</tr>
-									))
-							: 'No data'}
+						{!loading &&
+							data &&
+							data.length > 0 &&
+							data
+								.filter((item) => {
+									return search.toLowerCase() === ''
+										? item
+										: item.name.toLowerCase().includes(search);
+								})
+								.map((student, index) => (
+									<tr key={index}>
+										<td>{index + 1}</td>
+										<td>
+											<Link to={'/add'}>
+												<Button>add</Button>
+											</Link>
+											<Button>edit</Button>
+											<Button
+												onClick={() => {
+													handleDelete(student.student_code);
+												}}
+											>
+												delete
+											</Button>
+										</td>
+										{arr.map((e) => (
+											<td>{student[e]}</td>
+										))}
+									</tr>
+								))}
 					</tbody>
 				</Table>
 				<div className='px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between'>
