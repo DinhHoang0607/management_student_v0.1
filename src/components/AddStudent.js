@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import studentLists from './studentLists.json';
 import { v4 } from 'uuid';
 import { useNavigate, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
+import axios from 'axios';
 
 const today = new Date();
 
-const AddStudent = () => {
+const AddStudent = ({ token }) => {
 	const [name, setName] = useState('');
 	const [studentSCode, setStudentCode] = useState('');
 	const [email, setEmail] = useState('');
@@ -23,27 +23,49 @@ const AddStudent = () => {
 	const [avatar, setAvatar] = useState('');
 	const [religion, setReligion] = useState('');
 
+	const [student, setStudent] = useState({});
 	let history = useNavigate();
+	console.log(token);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+		try {
+			await axios.post(
+				'http://localhost:9090/dbProcedure/create/7B52F3BADA004506B403C5F8793D557D',
+				{
+					STUDENTNAME: name,
+					MSSV: studentSCode,
+					EMAIL: email,
+					PHONE: phoneNumber,
+					CMND: identifyCard,
+					QUEQUANTINH: 1,
+					QUEQUANHUYEN: 0,
+					QUEQUANXA: 0,
+					QUEQUANDIACHI: 'Thanh Hoá',
+					NOIOTINH: 10,
+					NOIOHUYEN: 0,
+					NOIOXA: 0,
+					NOIODIACHI: 'Hà Nội',
+					NGAYSINH: birthday,
+					CHUYENNGANH: major,
+					DANTOC: nation,
+					TONGIAO: religion,
+					GIOITINH: 1,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+			// console.log(token);
+		} catch (error) {
+			console.error(error.response.data);
+		}
 
-		studentLists.push({
-			name: name,
-			student_code: studentSCode,
-			email: email,
-			phone_number: phoneNumber,
-			identify_card: identifyCard,
-			address: '47569 Superior Way',
-			address_live: 'Apt 1145',
-			birthday: birthday,
-			major: major,
-			nation: nation,
-			religion: religion,
-			gender: gender,
-			avatar: avatar,
-		});
-		history('/');
+		// handleAdd(response);
+		// history('/');
 	};
 
 	return (
@@ -53,7 +75,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='text'
 						placeholder='Ho va ten'
-						required
+						// required
 						onChange={(e) => setName(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -61,7 +83,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='text'
 						placeholder='Ma sinh vien'
-						required
+						//required
 						onChange={(e) => setStudentCode(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -69,7 +91,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='email'
 						placeholder='Email'
-						required
+						//required
 						onChange={(e) => setEmail(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -78,7 +100,7 @@ const AddStudent = () => {
 						type='tel'
 						placeholder='So dien thoai'
 						pattern='[0][0-9]{9}'
-						required
+						//required
 						onChange={(e) => setPhoneNumber(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -86,7 +108,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='number'
 						placeholder='So cmnd/cccd'
-						required
+						//required
 						onChange={(e) => setIdentifyCard(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -119,7 +141,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='text'
 						placeholder='Chuyên ngành'
-						required
+						//required
 						onChange={(e) => setMajor(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -127,7 +149,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='text'
 						placeholder='Dân tộc'
-						required
+						//required
 						onChange={(e) => setNation(e.target.value)}
 					></Form.Control>
 				</Form.Group>
@@ -135,7 +157,7 @@ const AddStudent = () => {
 					<Form.Control
 						type='text'
 						placeholder='Tôn giáo'
-						required
+						//required
 						onChange={(e) => setReligion(e.target.value)}
 					></Form.Control>
 				</Form.Group>
