@@ -24,7 +24,7 @@ const EditStudent = ({ token }) => {
 	const [avatar, setAvatar] = useState('');
 	const [religion, setReligion] = useState('');
 	const [student, setStudent] = useState(null);
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
 
 	const params = useParams();
 	console.log(params.id);
@@ -34,7 +34,7 @@ const EditStudent = ({ token }) => {
 
 	useEffect(() => {
 		const getById = async () => {
-			setLoading(true);
+			// setLoading(true);
 			try {
 				const { data: response } = await axios.post(
 					'http://localhost:9090/dbProcedure/get/F3C47AE086BD4D81A92AD852C360169C',
@@ -52,28 +52,62 @@ const EditStudent = ({ token }) => {
 				setStudent(response.data.content.data[0]);
 				// console.log(response.data.content.data[0]);
 			} catch (error) {
-				console.error(error.message);
+				console.error(error.response.data);
 			}
 			//   return response
 		};
 		getById();
-		setLoading(false);
+		// setLoading(false);
 	}, []);
 	console.log(student);
 
-	// handleAdd(response);
-	// history('/');
-	const handleSubmit = () => {};
+	const updateStudent = async () => {
+		try {
+			await axios.put(
+				`http://localhost:9090/dbProcedure/update/5A0D044DEA7C4399BB26C47972297594/${params.id}`,
+				{
+					sMSSV: '123456xxx',
+					sEMAIL: 'doladola@gmail.com',
+					sPHONE: '0947017756',
+					sCMND: '174622999',
+					sQUEQUANTINH: 0,
+					sQUEQUANHUYEN: 0,
+					sQUEQUANXA: 0,
+					sQUEQUANDIACHI: 'Thanh Hoá',
+					sNOIOTINH: 0,
+					sNOIOHUYEN: 0,
+					sNOIOXA: 0,
+					sNOIODIACHI: 'Hà Nội',
+					sNGAYSINH: '1996-11-11 00:00:00',
+					sCHUYENNGANH: 'Dev',
+					sDANTOC: 'Kinh',
+					sTONGIAO: 'Không',
+					sGIOITINH: 1,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+	const handleSubmit = () => {
+		updateStudent();
+	};
 	return (
-		<div>
-			{loading && <div>loading</div>}
-			{!loading && (
+		<>
+			{/* {loading && <div>loading...</div>} */}
+			{/* {!loading && ( */}
 				<div>
 					{student && student.length > 0 && (
 						<Form className='d-grid gap-2' style={{ margin: '15rem' }}>
 							<Form.Group className='mb-3' controlId='formName'>
 								<Form.Control
-									value={student.FULLNAME}
+									// value={student.FULLNAME}
 									type='text'
 									placeholder='Ho va ten'
 									// required
@@ -113,24 +147,6 @@ const EditStudent = ({ token }) => {
 									onChange={(e) => setIdentifyCard(e.target.value)}
 								></Form.Control>
 							</Form.Group>
-							{/* <Form.Group className='mb-3' controlId='formName'>
-					<Form.Select onChange={(e) => setName(e.target.value)}>
-						<option>Tỉnh/ Thành phố</option>
-						<option value='1'>One</option>
-					</Form.Select>
-				</Form.Group>
-				<Form.Group className='mb-3' controlId='formName'>
-					<Form.Select onChange={(e) => setName(e.target.value)}>
-						<option>Quận/ Huyện</option>
-						<option value='1'>One</option>
-					</Form.Select>
-				</Form.Group>
-				<Form.Group className='mb-3' controlId='formName'>
-					<Form.Select onChange={(e) => setName(e.target.value)}>
-						<option>Phường/ Xã</option>
-						<option value='1'>One</option>
-					</Form.Select>
-				</Form.Group> */}
 							<Form.Group className='mb-3' controlId='formName'>
 								<Form.Label>Ngày sinh</Form.Label>
 								<Form.Control
@@ -181,8 +197,8 @@ const EditStudent = ({ token }) => {
 						</Form>
 					)}
 				</div>
-			)}
-		</div>
+			{/* )} */}
+		</>
 	);
 };
 

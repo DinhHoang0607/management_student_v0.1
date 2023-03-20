@@ -22,119 +22,90 @@ const arr = [
 	'GIOITINH',
 	'avatar',
 ];
-const Home = ({ data, loading, token }) => {
+const Home = ({ token }) => {
 	const [userList, setUserList] = useState([]);
 	const [page, setPage] = useState(1);
 	const [pageSize] = useState(10);
-	const [totalCount, setTotalCount] = useState(0);
+	const [totalCount, setTotalCount] = useState(10);
 	const [search, setSearch] = useState('');
-	const [search1, setSearch1] = useState('');
-	// const [data, setData] = useState(null);
+	// const [search1, setSearch1] = useState('');
+	const [data, setData] = useState(null);
 	// const [token, setToken] = useState('');
-	// const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	let history = useNavigate();
-	console.log(data, loading);
-	const getUserList = async (pg = page, pgSize = pageSize) => {
+	console.log(data, totalCount, page);
+
+	useEffect(() => {
+		fetchData();
+	}, [token]);
+
+	const fetchData = async (sr = search, pg = page, pgSize = pageSize) => {
+		setLoading(true);
 		try {
-			const params = {
-				page: pg,
-				pageSize: pgSize,
-			};
-		} catch (err) {
-			console.log('Error');
-		}
-	};
-	// useEffect(() => {
-	// 	getToken();
-	// });
-
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		setLoading(true);
-	// 		try {
-	// 			const { data: response } = await axios.post(
-	// 				'http://localhost:9090/dbProcedure/get/DFAA77D5132B47F7BF53E7389CF4E61C',
-	// 				{
-	// 					sQUEQUANTINH: 1,
-	// 					sNOIOTINH: 0,
-	// 					pageNumber: 0,
-	// 					limitNumber: 10,
-	// 					text: '',
-	// 				},
-	// 				{
-	// 					headers: {
-	// 						'Content-Type': 'application/json',
-	// 						Authorization: `Bearer ${token}`,
-	// 					},
-	// 				},
-	// 			);
-	// 			setData(response.data.content.data);
-	// 		} catch (error) {
-	// 			console.error(error.message);
-	// 		}
-	// 		setLoading(false);
-	// 	};
-	// 	fetchData();
-	// 	// setData(fetchData())
-	// 	// const getAllData = async () => {
-	// 	// 	const allData = await fetchData();
-	// 	// 	if (allData) setData(allData);
-	// 	// 	console.log(data.data.content.data);
-	// 	// };
-	// 	// getAllData();
-	// }, [token]);
-	// console.log(token, data);
-	// const getToken = async () => {
-	// 	try {
-	// 		const { data: response } = await axios.post(
-	// 			'http://localhost:9090/oauth/token',
-	// 			{
-	// 				username: 'trungkb',
-	// 				password: '123456',
-	// 				grant_type: 'password',
-	// 			},
-	// 			{
-	// 				auth: {
-	// 					username: 'a08',
-	// 					password: 'secret',
-	// 				},
-	// 				headers: {
-	// 					'Content-Type': 'multipart/form-data',
-	// 				},
-	// 			},
-	// 		);
-	// 		setToken(response.access_token);
-	// 	} catch (error) {
-	// 		console.error(error.message);
-	// 	}
-	// };
-
-	const handleDelete = (id) => {
-		// var index = data
-		// 	.map((e) => {
-		// 		return e.student_code;
-		// 	})
-		// 	.indexOf(student_code);
-		// data.splice(index, 1);
-		// console.log(data);
-		// history('/');
-		const deleteData = async () => {
-			try {
-				await axios.delete(
-					`http://localhost:9090/dbProcedure/delete/5CE842BF562A425D9491E77032E85DA6/${id}`,
-					{
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${token}`,
-						},
+			const { data: response } = await axios.post(
+				'http://localhost:9090/dbProcedure/get/DFAA77D5132B47F7BF53E7389CF4E61C',
+				{
+					sQUEQUANTINH: 0,
+					sNOIOTINH: 0,
+					pageNumber: pg - 1,
+					limitNumber: pgSize,
+					text: sr,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
 					},
-				);
-				// setData(response.data.content.data);
-			} catch (error) {
-				console.error(error.message);
-			}
-		};
-		deleteData();
+				},
+			);
+			setData(response.data.content.data);
+			// setTotalCount(data.length);
+		} catch (error) {
+			console.error(error.message);
+		}
+		setLoading(false);
+	};
+
+	const prevPage = () => {
+		const pg = page === 1 ? 1 : page - 1;
+		fetchData(pg);
+		setPage(pg);
+	};
+
+	const nextPage = () => {
+		const pg = page < Math.ceil(totalCount / pageSize) ? page + 1 : page;
+		fetchData(pg);
+		setPage(pg);
+	};
+	const handleSearch = () => {
+		fetchData(search);
+	};
+	const handleDelete = (id) => {
+		var index = data
+			.map((e) => {
+				return e.id;
+			})
+			.indexOf(id);
+		data.splice(index, 1);
+		console.log(data);
+		history('/');
+		// const deleteData = async () => {
+		// 	try {
+		// 		await axios.delete(
+		// 			`http://localhost:9090/dbProcedure/delete/5CE842BF562A425D9491E77032E85DA6/${id}`,
+		// 			{
+		// 				headers: {
+		// 					'Content-Type': 'application/json',
+		// 					Authorization: `Bearer ${token}`,
+		// 				},
+		// 			},
+		// 		);
+		// 		// setData(response.data.content.data);
+		// 	} catch (error) {
+		// 		console.error(error.message);
+		// 	}
+		// };
+		// deleteData();
 	};
 
 	return (
@@ -147,15 +118,12 @@ const Home = ({ data, loading, token }) => {
 							style={{ paddingRight: '5px' }}
 							type='text'
 							placeholder='Search'
-							required
-							onChange={(e) => setSearch1(e.target.value)}
+							onChange={(e) => setSearch(e.target.value)}
 						></Form.Control>
 						<Button
 							variant='warning'
 							style={{ marginLeft: '10px', width: '200px' }}
-							onClick={() => {
-								setSearch(search1);
-							}}
+							onClick={handleSearch}
 						>
 							<RiSearchLine />
 						</Button>
@@ -190,35 +158,29 @@ const Home = ({ data, loading, token }) => {
 						<tbody>
 							{data &&
 								data.length > 0 &&
-								data
-									.filter((item) => {
-										return search.toLowerCase() === ''
-											? item
-											: item.name.toLowerCase().includes(search);
-									})
-									.map((student, index) => (
-										<tr key={index}>
-											<td>{index + 1}</td>
-											<td>
-												<Link to={`/edit/${student.ID}`}>
-													<Button variant='info'>
-														<RiEdit2Line />
-													</Button>
-												</Link>
-												<Button
-													variant='danger'
-													onClick={() => {
-														handleDelete(student.ID);
-													}}
-												>
-													<RiDeleteBin7Line />
+								data.map((student, index) => (
+									<tr key={index}>
+										<td>{index + 1}</td>
+										<td>
+											<Link to={`/edit/${student.ID}`}>
+												<Button variant='info'>
+													<RiEdit2Line />
 												</Button>
-											</td>
-											{arr.map((e) => (
-												<td>{student[e]}</td>
-											))}
-										</tr>
-									))}
+											</Link>
+											<Button
+												variant='danger'
+												onClick={() => {
+													handleDelete(student.ID);
+												}}
+											>
+												<RiDeleteBin7Line />
+											</Button>
+										</td>
+										{arr.map((e) => (
+											<td>{student[e]}</td>
+										))}
+									</tr>
+								))}
 						</tbody>
 					</Table>
 					<div className='px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between'>
@@ -230,15 +192,15 @@ const Home = ({ data, loading, token }) => {
 						<div className='inline-flex mt-2 mt-0'>
 							<button
 								className='text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l'
-								// onClick={prevPage}
+								onClick={prevPage}
 							>
 								Prev
 							</button>
 							<button
 								className='text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r'
-								// onClick={nextPage}
+								onClick={nextPage}
 							>
-								Nextt
+								Next
 							</button>
 						</div>
 					</div>

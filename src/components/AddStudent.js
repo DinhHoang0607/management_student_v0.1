@@ -29,43 +29,129 @@ const AddStudent = ({ token }) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		addStudent();
+		// themMoi({
+		// 	STUDENTNAME: name,
+		// 	MSSV: studentSCode,
+		// 	EMAIL: email,
+		// 	PHONE: phoneNumber,
+		// 	CMND: identifyCard,
+		// 	QUEQUANTINH: 0,
+		// 	QUEQUANHUYEN: 0,
+		// 	QUEQUANXA: 0,
+		// 	QUEQUANDIACHI: 'Thanh Hoá',
+		// 	NOIOTINH: 10,
+		// 	NOIOHUYEN: 0,
+		// 	NOIOXA: 0,
+		// 	NOIODIACHI: 'Hà Nội',
+		// 	NGAYSINH: birthday,
+		// 	CHUYENNGANH: major,
+		// 	DANTOC: nation,
+		// 	TONGIAO: religion,
+		// 	GIOITINH: 1,
+		// },);
+		// updateStudent();
+		// try {
+		// 	await axios.post(
+		// 		'http://localhost:9090/dbProcedure/create/7B52F3BADA004506B403C5F8793D557D',
+		// 		{
+		// 			STUDENTNAME: name,
+		// 			MSSV: studentSCode,
+		// 			EMAIL: email,
+		// 			PHONE: phoneNumber,
+		// 			CMND: identifyCard,
+		// 			QUEQUANTINH: 1,
+		// 			QUEQUANHUYEN: 0,
+		// 			QUEQUANXA: 0,
+		// 			QUEQUANDIACHI: 'Thanh Hoá',
+		// 			NOIOTINH: 10,
+		// 			NOIOHUYEN: 0,
+		// 			NOIOXA: 0,
+		// 			NOIODIACHI: 'Hà Nội',
+		// 			NGAYSINH: birthday,
+		// 			CHUYENNGANH: major,
+		// 			DANTOC: nation,
+		// 			TONGIAO: religion,
+		// 			GIOITINH: 1,
+		// 		},
+		// 		{
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 				Authorization: `Bearer ${token}`,
+		// 			},
+		// 		},
+		// 	);
+		// 	// console.log(token);
+		// } catch (error) {
+		// 	console.error(error.message);
+		// }
+
+		// handleAdd(response);
+		// history('/');
+	};
+	const themMoi = async (data) => {
+		const headers = {
+			Authorization: `Bearer ${token}`,
+			'Content-Type': 'application/json', // kieu chuyen xuong , kieu json , mac dich
+		};
+
+		const url =
+			'http://localhost:9090/dbProcedure/create/7B52F3BADA004506B403C5F8793D557D'; // dia chi cua api
+		await axios({
+			method: 'POST', // phuong thuc su dung, GET < POST < PUT < DELETE
+			url: url, // dia chi cua api
+			headers: headers,
+			data: JSON.stringify(data), //gia tri truyen vao dang body
+		})
+			.then()
+			.catch(function (error) {
+				console.log('lỗi k gọi được api do kết nối');
+			});
+		// if (res.message == 'OK') {
+		// 	// THÀNH CÔNG
+		// 	const tempData = res.data;
+		// } else {
+		// 	console.log('lỗi do api trả về, do code của be');
+		// }
+	};
+
+	const addStudent = async () => {
 		try {
 			await axios.post(
 				'http://localhost:9090/dbProcedure/create/7B52F3BADA004506B403C5F8793D557D',
-				{
-					STUDENTNAME: name,
-					MSSV: studentSCode,
-					EMAIL: email,
-					PHONE: phoneNumber,
-					CMND: identifyCard,
-					QUEQUANTINH: 1,
-					QUEQUANHUYEN: 0,
-					QUEQUANXA: 0,
-					QUEQUANDIACHI: 'Thanh Hoá',
-					NOIOTINH: 10,
-					NOIOHUYEN: 0,
-					NOIOXA: 0,
-					NOIODIACHI: 'Hà Nội',
-					NGAYSINH: birthday,
-					CHUYENNGANH: major,
-					DANTOC: nation,
-					TONGIAO: religion,
-					GIOITINH: 1,
-				},
 				{
 					headers: {
 						'Content-Type': 'application/json',
 						Authorization: `Bearer ${token}`,
 					},
 				},
+				{
+					data: JSON.stringify({
+						STUDENTNAME: name,
+						MSSV: studentSCode,
+						EMAIL: email,
+						PHONE: phoneNumber,
+						CMND: identifyCard,
+						QUEQUANTINH: 0,
+						QUEQUANHUYEN: 0,
+						QUEQUANXA: 0,
+						QUEQUANDIACHI: 'Thanh Hoá',
+						NOIOTINH: 10,
+						NOIOHUYEN: 0,
+						NOIOXA: 0,
+						NOIODIACHI: 'Hà Nội',
+						NGAYSINH: birthday,
+						CHUYENNGANH: major,
+						DANTOC: nation,
+						TONGIAO: religion,
+						GIOITINH: 1,
+					}),
+				},
 			);
 			// console.log(token);
 		} catch (error) {
-			console.error(error.response.data);
+			console.error(error.message);
 		}
-
-		// handleAdd(response);
-		// history('/');
 	};
 
 	return (

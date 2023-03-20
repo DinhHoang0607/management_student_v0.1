@@ -10,40 +10,40 @@ import EditStudent from './components/EditStudent';
 function App() {
 	const [token, setToken] = useState('');
 	const [data, setData] = useState([]);
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		getToken();
 	});
 
-	useEffect(() => {
-		const fetchData = async () => {
-			setLoading(true);
-			try {
-				const { data: response } = await axios.post(
-					'http://localhost:9090/dbProcedure/get/DFAA77D5132B47F7BF53E7389CF4E61C',
-					{
-						sQUEQUANTINH: 1,
-						sNOIOTINH: 0,
-						pageNumber: 0,
-						limitNumber: 10,
-						text: '',
-					},
-					{
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${token}`,
-						},
-					},
-				);
-				setData(response.data.content.data);
-			} catch (error) {
-				console.error(error.message);
-			}
-			setLoading(false);
-		};
-		fetchData();
-	}, [token]);
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		setLoading(true);
+	// 		try {
+	// 			const { data: response } = await axios.post(
+	// 				'http://localhost:9090/dbProcedure/get/DFAA77D5132B47F7BF53E7389CF4E61C',
+	// 				{
+	// 					sQUEQUANTINH: 1,
+	// 					sNOIOTINH: 0,
+	// 					pageNumber: 0,
+	// 					limitNumber: 10,
+	// 					text: '',
+	// 				},
+	// 				{
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 						Authorization: `Bearer ${token}`,
+	// 					},
+	// 				},
+	// 			);
+	// 			setData(response.data.content.data);
+	// 		} catch (error) {
+	// 			console.error(error.message);
+	// 		}
+	// 		setLoading(false);
+	// 	};
+	// 	fetchData();
+	// }, [token]);
 	// console.log(token, data);
 	const getToken = async () => {
 		try {
@@ -76,7 +76,7 @@ function App() {
 				<Routes>
 					<Route
 						path='/'
-						element={<Home data={data} loading={loading} token={token} />}
+						element={<Home token={token} />}
 					/>
 					<Route path='/create' element={<AddStudent token={token} />} />
 					<Route path='/edit/:id' element={<EditStudent token={token} />} />
