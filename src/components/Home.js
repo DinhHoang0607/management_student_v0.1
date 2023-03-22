@@ -25,8 +25,8 @@ const arr = [
 const Home = ({ token }) => {
 	const [userList, setUserList] = useState([]);
 	const [page, setPage] = useState(1);
-	const [pageSize] = useState(10);
-	const [totalCount, setTotalCount] = useState(10);
+	const [pageSize] = useState(500);
+	const [totalCount, setTotalCount] = useState(0);
 	const [search, setSearch] = useState('');
 	// const [search1, setSearch1] = useState('');
 	const [data, setData] = useState(null);
@@ -79,6 +79,10 @@ const Home = ({ token }) => {
 	};
 	const handleSearch = () => {
 		fetchData(search);
+	};
+
+	const handleEdit = (id) => {
+		history('/edit/' + id);
 	};
 	const handleDelete = (id) => {
 		var index = data
@@ -162,11 +166,16 @@ const Home = ({ token }) => {
 									<tr key={index}>
 										<td>{index + 1}</td>
 										<td>
-											<Link to={`/edit/${student.ID}`}>
-												<Button variant='info'>
-													<RiEdit2Line />
-												</Button>
-											</Link>
+											{/* <Link to={`/edit/${student.ID}`}> */}
+											<Button
+												onClick={() => {
+													handleEdit(student.ID);
+												}}
+												variant='info'
+											>
+												<RiEdit2Line />
+											</Button>
+											{/* </Link> */}
 											<Button
 												variant='danger'
 												onClick={() => {

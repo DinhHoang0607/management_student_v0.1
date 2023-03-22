@@ -15,36 +15,6 @@ function App() {
 	useEffect(() => {
 		getToken();
 	});
-
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		setLoading(true);
-	// 		try {
-	// 			const { data: response } = await axios.post(
-	// 				'http://localhost:9090/dbProcedure/get/DFAA77D5132B47F7BF53E7389CF4E61C',
-	// 				{
-	// 					sQUEQUANTINH: 1,
-	// 					sNOIOTINH: 0,
-	// 					pageNumber: 0,
-	// 					limitNumber: 10,
-	// 					text: '',
-	// 				},
-	// 				{
-	// 					headers: {
-	// 						'Content-Type': 'application/json',
-	// 						Authorization: `Bearer ${token}`,
-	// 					},
-	// 				},
-	// 			);
-	// 			setData(response.data.content.data);
-	// 		} catch (error) {
-	// 			console.error(error.message);
-	// 		}
-	// 		setLoading(false);
-	// 	};
-	// 	fetchData();
-	// }, [token]);
-	// console.log(token, data);
 	const getToken = async () => {
 		try {
 			const { data: response } = await axios.post(
